@@ -1,0 +1,10 @@
+version: '2'
+services:
+  cam:
+    restart: always
+    environment:
+      - DOCKER=True
+    build: .
+    command: bash docker_entrypoint.sh
+    volumes:
+      - .:/src
