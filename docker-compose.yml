@@ -5,6 +5,6 @@ services:
     environment:
       - DOCKER=True
     build: .
-    command: bash docker_entrypoint.sh
+    command: bash docker-entrypoint.sh
     volumes:
-      - .:/src
+      - .:/app

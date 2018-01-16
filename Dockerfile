@@ -7,8 +7,6 @@ ADD . /src
 WORKDIR /src
 
 RUN apt-get update && apt-get install -y \
-  v4l2loopback-utils \
   libgphoto2* \
-  vlc
 
 RUN pip install -r requirements.txt

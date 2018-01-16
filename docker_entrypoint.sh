@@ -1,2 +1,2 @@
 #!/bin/bash
-python preview-feed.py
+python camera-summary-oo.py
