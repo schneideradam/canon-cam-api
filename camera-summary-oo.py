@@ -27,18 +27,16 @@ import sys
 import gphoto2 as gp
 
 def main():
-    while True:
-        logging.basicConfig(
-            format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
-        gp.check_result(gp.use_python_logging())
-        camera = gp.Camera()
-        camera.init()
-        text = camera.get_summary()
-        print('Summary')
-        print('=======')
-        print(str(text))
-        camera.exit()
-        print('Test complete. Prest CTL+C to close')
+    logging.basicConfig(
+        format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
+    gp.check_result(gp.use_python_logging())
+    camera = gp.Camera()
+    camera.init()
+    text = camera.get_summary()
+    print('Summary')
+    print('=======')
+    print(str(text))
+    camera.exit()
     return 0
 
 if __name__ == "__main__":
