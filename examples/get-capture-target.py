@@ -2,7 +2,7 @@
 
 # python-gphoto2 - Python interface to libgphoto2
 # http://github.com/jim-easterbrook/python-gphoto2
-# Copyright (C) 2014  Jim Easterbrook  jim@jim-easterbrook.me.uk
+# Copyright (C) 2015-17  Jim Easterbrook  jim@jim-easterbrook.me.uk
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# "object oriented" version of camera-summary.py
-
 from __future__ import print_function
 
 import logging
@@ -27,16 +25,27 @@ import sys
 import gphoto2 as gp
 
 def main():
+    # use Python logging
     logging.basicConfig(
         format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
     gp.check_result(gp.use_python_logging())
-    camera = gp.Camera()
-    camera.init()
-    text = camera.get_summary()
-    print('Summary')
-    print('=======')
-    print(str(text))
-    camera.exit()
+    # open camera connection
+    camera = gp.check_result(gp.gp_camera_new())
+    gp.check_result(gp.gp_camera_init(camera))
+    # get configuration tree
+    config = gp.check_result(gp.gp_camera_get_config(camera))
+    # find the capture target config item
+    capture_target = gp.check_result(
+        gp.gp_widget_get_child_by_name(config, 'capturetarget'))
+    # print current setting
+    value = gp.check_result(gp.gp_widget_get_value(capture_target))
+    print('Current setting:', value)
+    # print possible settings
+    for n in range(gp.check_result(gp.gp_widget_count_choices(capture_target))):
+        choice = gp.check_result(gp.gp_widget_get_choice(capture_target, n))
+        print('Choice:', n, choice)
+    # clean up
+    gp.check_result(gp.gp_camera_exit(camera))
     return 0
 
 if __name__ == "__main__":
