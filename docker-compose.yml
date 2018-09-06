@@ -5,6 +5,22 @@ services:
     environment:
       - DOCKER=True
     build: .
-    command: bash docker-entrypoint.sh
+    command: bash docker_entrypoint.sh
     volumes:
       - .:/src
+    env_file:
+      - .env
+    devices:
+      - "/dev/bus/usb:/dev/bus/usb"
+    depends_on:
+      - mqtt
+  mqtt:
+    restart: always
+    image: erlio/docker-vernemq
+    ports:
+      - "1883:1883"
+      - "8080:8080"
+    env_file:
+      - .mqtt_env
+volumes:
+  source_photos:

@@ -1,2 +1,2 @@
 #!/bin/bash
-python camera-summary-oo.py
+python3 camera_init.py

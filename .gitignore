@@ -1,0 +1,8 @@
+ansible/group_vars/*.yml
+ansible/vault_pass.txt
+*__pycache__*
+.env
+.cache
+htmlcov
+.coverage
+*.pyc
