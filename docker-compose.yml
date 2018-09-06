@@ -16,10 +16,10 @@ services:
       - mqtt
   mqtt:
     restart: always
-    image: erlio/docker-vernemq
+    image: mjenz/rpi-mosquitto
     ports:
       - "1883:1883"
-      - "8080:8080"
+      - "9001:9001"
     env_file:
       - .mqtt_env
 volumes:
