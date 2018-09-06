@@ -19,8 +19,10 @@ def on_message(client, userdata, msg):
     payload = msg.payload.decode()
     print(payload)
     try:
-        # res = CameraActions.trigger(action=payload)
+        action = CameraActions()
+        image = action.capture_image()
         logger.info(payload)
+        print(image)
     except Exception as e:
         logger.error(
             'Could not trigger camera. {}'.format(str(e))

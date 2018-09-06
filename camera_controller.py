@@ -28,27 +28,12 @@ import gphoto2 as gp
 
 class CameraActions:
 
-    def test_camera(self):
-        pass
-
-def main():
-    logging.basicConfig(
-        format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
-    gp.check_result(gp.use_python_logging())
-    camera = gp.check_result(gp.gp_camera_new())
-    gp.check_result(gp.gp_camera_init(camera))
-    print('Capturing image')
-    file_path = gp.check_result(gp.gp_camera_capture(
-        camera, gp.GP_CAPTURE_IMAGE))
-    print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
-    target = os.path.join('/tmp', file_path.name)
-    print('Copying image to', target)
-    camera_file = gp.check_result(gp.gp_camera_file_get(
-            camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL))
-    gp.check_result(gp.gp_file_save(camera_file, target))
-    subprocess.call(['xdg-open', target])
-    gp.check_result(gp.gp_camera_exit(camera))
-    return 0
-
-if __name__ == "__main__":
-    sys.exit(main())
+    def capture_image(self):
+        context = gp.Context()
+        camera = gp.Camera()
+        camera.init(context)
+        text = camera.get_summary(context)
+        print('Summary')
+        print('=======')
+        print(str(text))
+        camera.exit(context)

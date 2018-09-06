@@ -22,5 +22,5 @@ client.connect("localhost", 1883, 60)
 # Other loop*() functions are available that give a threaded interface and a
 # manual interface.
 
-client.publish('camera_comms/', payload="Hello World!")
+client.publish('camera_comms/', payload="status")
 #client.loop_forever()
