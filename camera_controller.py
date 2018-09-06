@@ -44,9 +44,9 @@ class CameraActions:
         file_path = gp.check_result(gp.gp_camera_capture(
             camera, gp.GP_CAPTURE_IMAGE))
         print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
-        target = os.path.join('/source_photos', file_path.name)
+        target = file_path.name
         print('Copying image to', target)
         camera_file = gp.check_result(gp.gp_camera_file_get(
                 camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL))
         gp.check_result(gp.gp_file_save(camera_file, target))
-        gp.check_result(gp.gp_camera_exit(camera)
+        gp.check_result(gp.gp_camera_exit(camera))

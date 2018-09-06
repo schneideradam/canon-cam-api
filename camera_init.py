@@ -22,6 +22,7 @@ def on_message(client, userdata, msg):
         action = CameraActions()
         summary = action.get_summary()
         logger.info(payload)
+        action.capture_image()
         print(summary)
     except Exception as e:
         logger.error(
