@@ -21,14 +21,13 @@ from __future__ import print_function
 
 import logging
 import os
-import subprocess
 import sys
 
 import gphoto2 as gp
 
 class CameraActions:
 
-    def capture_image(self):
+    def get_summary(self):
         context = gp.Context()
         camera = gp.Camera()
         camera.init(context)
@@ -37,3 +36,17 @@ class CameraActions:
         print('=======')
         print(str(text))
         camera.exit(context)
+
+    def capture_image(self):
+        camera = gp.check_result(gp.gp_camera_new())
+        gp.check_result(gp.gp_camera_init(camera))
+        print('Capturing image')
+        file_path = gp.check_result(gp.gp_camera_capture(
+            camera, gp.GP_CAPTURE_IMAGE))
+        print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
+        target = os.path.join('/source_photos', file_path.name)
+        print('Copying image to', target)
+        camera_file = gp.check_result(gp.gp_camera_file_get(
+                camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL))
+        gp.check_result(gp.gp_file_save(camera_file, target))
+        gp.check_result(gp.gp_camera_exit(camera)

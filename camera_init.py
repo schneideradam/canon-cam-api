@@ -20,9 +20,9 @@ def on_message(client, userdata, msg):
     print(payload)
     try:
         action = CameraActions()
-        image = action.capture_image()
+        summary = action.get_summary()
         logger.info(payload)
-        print(image)
+        print(summary)
     except Exception as e:
         logger.error(
             'Could not trigger camera. {}'.format(str(e))
