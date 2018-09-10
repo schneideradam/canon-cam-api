@@ -6,7 +6,10 @@ import os
 
 logger = logging.getLogger(__name__)
 
-MQTT_HOSTNAME = os.environ.get('MQTT_HOSTNAME', "localhost")
+if os.environ.get('DOCKER'):
+    MQTT_HOSTNAME = os.environ.get('MQTT_HOSTNAME', "localhost")
+else:
+    MQTT_HOSTNAME = 'localhost'
 
 def on_connect(client, userdata, flags, rc):
     logger.info("Connected with result code "+str(rc))
@@ -21,7 +24,7 @@ def on_message(client, userdata, msg):
     if payload == 'capture':
         try:
             image = action.capture_image()
-            logger.info("Capturing image...")
+            client.publish('camera_comms/', payload=image)
         except Exception as e:
             logger.error(
                 'Could not access camera {}'.format(str(e))
@@ -29,7 +32,7 @@ def on_message(client, userdata, msg):
     elif payload == 'status':
         try:
             summary = action.get_summary()
-            logger.info(summary)
+            client.publish('camera_comms/', payload=summary)
         except Exception as e:
             logger.error(
                 'Could not access camera {}'.format(str(e))
@@ -37,11 +40,11 @@ def on_message(client, userdata, msg):
     else:
         logger.error('Unknown command {}'.format(payload))
 
+
 client = mqtt.Client(client_id='camera_status')
 # client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
 client.on_connect = on_connect
 client.on_message = on_message
-# import pdb; pdb.set_trace()
 client.connect(MQTT_HOSTNAME, 1883, 60)
 
 # Blocking call that processes network traffic, dispatches callbacks and

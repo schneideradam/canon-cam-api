@@ -20,6 +20,7 @@ class CameraActions:
         text = camera.get_summary(context)
         logging.debug(str(text))
         camera.exit(context)
+        return str(text)
 
     def capture_image(self, *args, **kwargs):
         camera = gp.check_result(gp.gp_camera_new())
@@ -32,3 +33,6 @@ class CameraActions:
         camera_file = gp.check_result(gp.gp_camera_file_get(camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL))
         gp.check_result(gp.gp_file_save(camera_file, target))
         gp.check_result(gp.gp_camera_exit(camera))
+        with open(target, 'rb') as photo:
+            photo_file = photo.read()
+        return photo_file
