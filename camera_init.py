@@ -17,7 +17,6 @@ def on_connect(client, userdata, flags, rc):
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     payload = msg.payload.decode()
-<<<<<<< HEAD
     action = CameraActions()
     if payload == 'capture':
         try:
@@ -37,22 +36,6 @@ def on_message(client, userdata, msg):
             )
     else:
         logger.error('Unknown command {}'.format(payload))
-
-=======
-    print(payload)
-    try:
-        action = CameraActions()
-        summary = action.get_summary()
-        logger.info(payload)
-        action.capture_image()
-        print(summary)
-    except Exception as e:
-        logger.error(
-            'Could not trigger camera. {}'.format(str(e))
-        )
-        return
-    logger.info('Image captured')
->>>>>>> ce9f2102c7973bf856bfda445d5f6f5cee7cc637
 
 client = mqtt.Client(client_id='camera_status')
 # client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
