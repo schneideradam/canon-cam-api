@@ -2,6 +2,8 @@
 
 import paho.mqtt.client as mqtt
 
+MQTT_HOST = "camera-controller.local"
+
 def on_connect(client, userdata, flags, rc):
     logger.info("Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
@@ -16,7 +18,7 @@ client = mqtt.Client(client_id='test_client')
 # client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
 client.on_connect = on_connect
 client.on_message = on_message
-client.connect("192.168.2.41", 1883, 60)
+client.connect(MQTT_HOST, 1883, 60)
 # Blocking call that processes network traffic, dispatches callbacks and
 # handles reconnecting.
 # Other loop*() functions are available that give a threaded interface and a

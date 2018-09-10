@@ -1,29 +1,15 @@
 #!/usr/bin/env python
 
-# python-gphoto2 - Python interface to libgphoto2
-# http://github.com/jim-easterbrook/python-gphoto2
-# Copyright (C) 2015-17  Jim Easterbrook  jim@jim-easterbrook.me.uk
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from __future__ import print_function
-
 import logging
 import os
 import sys
+import time
 
 import gphoto2 as gp
+
+logging.basicConfig(level=logging.DEBUG)
+
+PHOTOS_FOLDER = os.environ.get('PHOTOS_FOLDER', '/tmp')
 
 class CameraActions:
 
@@ -32,21 +18,17 @@ class CameraActions:
         camera = gp.Camera()
         camera.init(context)
         text = camera.get_summary(context)
-        print('Summary')
-        print('=======')
-        print(str(text))
+        logging.debug(str(text))
         camera.exit(context)
 
-    def capture_image(self):
+    def capture_image(self, *args, **kwargs):
         camera = gp.check_result(gp.gp_camera_new())
         gp.check_result(gp.gp_camera_init(camera))
-        print('Capturing image')
-        file_path = gp.check_result(gp.gp_camera_capture(
-            camera, gp.GP_CAPTURE_IMAGE))
-        print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
-        target = os.path.join('/source_photos', file_path.name)
-        print('Copying image to', target)
-        camera_file = gp.check_result(gp.gp_camera_file_get(
-                camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL))
+        file_path = gp.check_result(gp.gp_camera_capture(camera, gp.GP_CAPTURE_IMAGE))
+        logging.debug('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
+        target = os.path.join(PHOTOS_FOLDER, "photo_{}.jpg".format(
+                time.strftime("%Y%m%d-%H%M%S", time.localtime())))
+        logging.debug('Copying image to {}'.format(target))
+        camera_file = gp.check_result(gp.gp_camera_file_get(camera, file_path.folder, file_path.name, gp.GP_FILE_TYPE_NORMAL))
         gp.check_result(gp.gp_file_save(camera_file, target))
-        gp.check_result(gp.gp_camera_exit(camera)
+        gp.check_result(gp.gp_camera_exit(camera))
