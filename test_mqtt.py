@@ -2,15 +2,15 @@
 import time
 import paho.mqtt.client as mqtt
 
-MQTT_HOST = "camera-controller.local"
-TIMEOUT = 200
+MQTT_HOST = "0.tcp.ngrok.io"
+TIMEOUT = 50
 CALLBACK = 0
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    client.subscribe("camera_comms/")
+    client.subscribe("camera_comms/#")
 
 
 def on_message(client, userdata, msg):
@@ -20,10 +20,10 @@ def on_message(client, userdata, msg):
         img.write(image)
     super().CALLBACK = (TIMEOUT + 1)
 
+
 def on_status(client, userdata, msg):
     payload = msg.payload.decode()
     print(payload)
-    super().CALLBACK = (TIMEOUT + 1)
 
 
 client = mqtt.Client(client_id='test_client')
@@ -31,8 +31,7 @@ client = mqtt.Client(client_id='test_client')
 client.on_connect = on_connect
 client.on_message = on_message
 client.message_callback_add('camera_comms/status/', on_status)
-# client.message_callback_add('camera_comms/', on_image)
-client.connect(MQTT_HOST, 1883, 60)
+client.connect(MQTT_HOST, 12653, 60)
 
 # Blocking call that processes network traffic, dispatches callbacks and
 # handles reconnecting.
