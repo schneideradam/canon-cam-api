@@ -1,4 +1,4 @@
-FROM lakerfield/dotnet-gphoto2
+FROM jjanzic/docker-python3-opencv:opencv-3.3.0
 
 ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
@@ -8,9 +8,5 @@ WORKDIR /src
 
 RUN apt-get update && apt-get install -y \
 libgphoto2*
-python3 -y
-python3-pip -y
 
-RUN pip3 install -r requirements.txt
-
-EXPOSE 8080
+RUN pip install -r requirements.txt
