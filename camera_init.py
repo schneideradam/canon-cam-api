@@ -11,6 +11,8 @@ if os.environ.get('DOCKER'):
 else:
     MQTT_HOSTNAME = 'localhost'
 
+CAMERA = os.environ.get('CAMERA_CONNECTED', True)
+
 def on_connect(client, userdata, flags, rc):
     logger.info("Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
@@ -22,13 +24,17 @@ def on_message(client, userdata, msg):
     payload = msg.payload.decode()
     action = CameraActions()
     if payload == 'capture':
-        try:
-            image = action.capture_image()
-            client.publish('camera_comms/', payload=image)
-        except Exception as e:
-            logger.error(
-                'Could not access camera {}'.format(str(e))
-            )
+        if CAMERA:
+            try:
+                image = action.capture_image()
+                client.publish('camera_comms/', payload=image)
+            except Exception as e:
+                logger.error(
+                    'Could not access camera {}'.format(str(e))
+                )
+        else:
+            with open('test/test_image.jpg', 'rb') as image:
+                client.publish('camera_comms/', payload=image)
     elif payload == 'status':
         try:
             summary = action.get_summary()
