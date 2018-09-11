@@ -17,7 +17,7 @@ def on_connect(client, userdata, flags, rc):
     logger.info("Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    client.subscribe("camera_comms/")
+    client.subscribe("camera_comms/#")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -38,7 +38,7 @@ def on_message(client, userdata, msg):
     elif payload == 'status':
         try:
             summary = action.get_summary()
-            client.publish('camera_comms/', payload=summary)
+            client.publish('camera_comms/status/', payload=summary)
         except Exception as e:
             logger.error(
                 'Could not access camera {}'.format(str(e))

@@ -5,3 +5,4 @@ ansible/vault_pass.txt
 htmlcov
 .coverage
 *.pyc
+photos/*
