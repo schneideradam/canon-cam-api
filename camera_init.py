@@ -23,8 +23,8 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     payload = msg.payload.decode()
     action = CameraActions()
-    if payload == 'capture':
-        if CAMERA:
+    if CAMERA:
+        if payload == 'capture':
             try:
                 image = action.capture_image()
                 client.publish('camera_comms/', payload=image)
@@ -32,19 +32,27 @@ def on_message(client, userdata, msg):
                 logger.error(
                     'Could not access camera {}'.format(str(e))
                 )
+                client.publish('camera_comms/', payload=str(e))
+        elif payload == 'status':
+            try:
+                summary = action.get_summary()
+                client.publish('camera_comms/status/', payload=summary)
+            except Exception as e:
+                logger.error(
+                    'Could not access camera {}'.format(str(e))
+                )
+                client.publish('camera_comms/status/', payload=str(e))
         else:
+            logger.error('Unknown command {}'.format(payload))
+    else:
+        if payload == 'status':
+            client.publish('camera_comms/status/', payload="this is a test camera")
+        elif payload == 'capture':
             with open('test/test_image.jpg', 'rb') as image:
                 client.publish('camera_comms/', payload=image)
-    elif payload == 'status':
-        try:
-            summary = action.get_summary()
-            client.publish('camera_comms/status/', payload=summary)
-        except Exception as e:
-            logger.error(
-                'Could not access camera {}'.format(str(e))
-            )
-    else:
-        logger.error('Unknown command {}'.format(payload))
+        else:
+            logger.error('Unknown command {}'.format(payload))
+
 
 
 client = mqtt.Client(client_id='camera_status')

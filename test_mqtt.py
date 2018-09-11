@@ -22,7 +22,7 @@ def on_message(client, userdata, msg):
 
 def on_status(client, userdata, msg):
     payload = msg.payload.decode()
-    print(msg.payload.decode())
+    print(payload)
     super().CALLBACK = (TIMEOUT + 1)
 
 
@@ -39,7 +39,7 @@ client.connect(MQTT_HOST, 1883, 60)
 # Other loop*() functions are available that give a threaded interface and a
 # manual interface.
 client.publish('camera_comms/status/', payload='status')
-client.publish('camera_comms/', payload='capture')
+# client.publish('camera_comms/', payload='capture')
 client.loop_start()
 while CALLBACK < TIMEOUT:
     time.sleep(.01)
