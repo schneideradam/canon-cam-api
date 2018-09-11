@@ -30,7 +30,7 @@ client = mqtt.Client(client_id='test_client')
 # client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
 client.on_connect = on_connect
 client.on_message = on_message
-client.message_callback_add('camera_comms/', on_status)
+client.message_callback_add('camera_comms/status/', on_status)
 # client.message_callback_add('camera_comms/', on_image)
 client.connect(MQTT_HOST, 1883, 60)
 
