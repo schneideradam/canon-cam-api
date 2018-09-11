@@ -2,7 +2,7 @@
 import time
 import paho.mqtt.client as mqtt
 
-MQTT_HOST = "localhost"
+MQTT_HOST = "camtest.spinifex.io"
 TIMEOUT = 200
 CALLBACK = 0
 
