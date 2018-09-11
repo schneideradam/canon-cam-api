@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 import time
+import sys
 import paho.mqtt.client as mqtt
-
-MQTT_HOST = "0.tcp.ngrok.io"
-TIMEOUT = 50
-CALLBACK = 0
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -25,23 +22,36 @@ def on_status(client, userdata, msg):
     payload = msg.payload.decode()
     print(payload)
 
+def main(action='status'):
 
-client = mqtt.Client(client_id='test_client')
-# client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
-client.on_connect = on_connect
-client.on_message = on_message
-client.message_callback_add('camera_comms/status/', on_status)
-client.connect(MQTT_HOST, 12653, 60)
+    MQTT_HOST = "0.tcp.ngrok.io"
+    TIMEOUT = 200
+    CALLBACK = 0
 
-# Blocking call that processes network traffic, dispatches callbacks and
-# handles reconnecting.
-# Other loop*() functions are available that give a threaded interface and a
-# manual interface.
-client.publish('camera_comms/status/', payload='status')
-# client.publish('camera_comms/', payload='capture')
-client.loop_start()
-while CALLBACK < TIMEOUT:
-    time.sleep(.01)
-    CALLBACK += 1
-client.disconnect()
-client.loop_stop()
+    client = mqtt.Client(client_id='test_client')
+    # client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.message_callback_add('camera_comms/status/', on_status)
+    client.connect(MQTT_HOST, 12653, 60)
+
+    # Blocking call that processes network traffic, dispatches callbacks and
+    # handles reconnecting.
+    # Other loop*() functions are available that give a threaded interface and a
+    # manual interface.
+    if action == 'capture':
+        client.publish('camera_comms/', payload='capture')
+    else:
+        client.publish('camera_comms/status/', payload='status')
+    client.loop_start()
+    while CALLBACK < TIMEOUT:
+        time.sleep(.01)
+        CALLBACK += 1
+    client.disconnect()
+    client.loop_stop()
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        main(sys.argv[1])
+    else:
+        main()
