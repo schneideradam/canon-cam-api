@@ -11,11 +11,12 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
+    print(TIMEOUT)
     filename = "photos/image_{}.jpg".format(time.strftime("%Y%m%d-%H%M%S", time.localtime()))
     image = msg.payload
     with open(filename, 'wb') as img:
         img.write(image)
-    super().CALLBACK = (TIMEOUT + 1)
+    super().CALLBACK = (super().TIMEOUT + 1)
 
 
 def on_status(client, userdata, msg):
