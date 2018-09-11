@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/src
     env_file:
-      - .dev_env
+      - .env
     devices:
       - "/dev/bus/usb:/dev/bus/usb"
     depends_on:

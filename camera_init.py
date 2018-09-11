@@ -7,11 +7,11 @@ import os
 logger = logging.getLogger(__name__)
 
 if os.environ.get('DOCKER'):
-    MQTT_HOSTNAME = os.environ.get('MQTT_HOSTNAME', "localhost")
+    MQTT_HOSTNAME = 'mqtt'
 else:
     MQTT_HOSTNAME = 'localhost'
 
-CAMERA = os.environ.get('CAMERA_CONNECTED', True)
+CAMERA = os.environ.get('CAMERA_CONNECTED', None)
 
 def on_connect(client, userdata, flags, rc):
     logger.info("Connected with result code "+str(rc))
