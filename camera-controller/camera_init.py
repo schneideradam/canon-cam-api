@@ -47,7 +47,7 @@ def on_message(client, userdata, msg):
         try:
             image = action.capture_image()
             client.publish('camera_comms/', payload=image)
-            logger.info('Image captured')
+            logger.info('Image captured - {}'.format(image.name))
         except Exception as e:
             logger.error(
                 'Could not access camera {}'.format(str(e))

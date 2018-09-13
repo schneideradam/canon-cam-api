@@ -2,9 +2,7 @@
 import os
 import sys
 import time
-import logging
-
-logger = logging.getLogger(__name__)
+import logging.config
 
 # The camera interface library
 import gphoto2 as gp

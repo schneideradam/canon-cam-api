@@ -4,6 +4,8 @@ import sys
 import os
 import paho.mqtt.client as mqtt
 
+DIR = os.path.dirname(os.path.realpath(__file__))
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
@@ -12,7 +14,7 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    filename = "photos/image_{}.jpg".format(time.strftime("%Y%m%d-%H%M%S", time.localtime()))
+    filename = "{}/photos/image_{}.jpg".format(DIR, time.strftime("%Y%m%d-%H%M%S", time.localtime()))
     image = msg.payload
     with open(filename, 'wb') as img:
         img.write(image)
@@ -27,9 +29,11 @@ def main(action='status'):
 
     if os.environ.get('DOCKER'):
         MQTT_HOST = 'mqtt'
+        MQTT_PORT = '1883'
     else:
-        MQTT_HOST = 'localhost'
-    TIMEOUT = 300
+        MQTT_HOST = '0.tcp.ngrok.io'
+        MQTT_PORT = 12653
+    TIMEOUT = 200
     CALLBACK = 0
 
     client = mqtt.Client(client_id='test_client')
@@ -37,7 +41,7 @@ def main(action='status'):
     client.on_connect = on_connect
     client.on_message = on_message
     client.message_callback_add('camera_comms/status/', on_status)
-    client.connect(MQTT_HOST, 1883, 60)
+    client.connect(MQTT_HOST, MQTT_PORT, 60)
 
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.
