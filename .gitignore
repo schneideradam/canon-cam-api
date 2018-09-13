@@ -6,3 +6,4 @@ htmlcov
 .coverage
 *.pyc
 test/photos/*
+*.DS_store*
