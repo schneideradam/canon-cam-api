@@ -1,4 +1,4 @@
-FROM lakerfield/dotnet-gphoto2
+FROM python:3.6-stretch
 
 ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
