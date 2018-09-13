@@ -2,12 +2,13 @@
 import os
 import sys
 import time
-import logging.config
+import logging
 
 # The camera interface library
 import gphoto2 as gp
 
 PHOTOS_FOLDER = os.environ.get('PHOTOS_FOLDER', '/tmp')
+logger = logging.getLogger(__name__)
 
 class CameraActions:
 
@@ -33,4 +34,4 @@ class CameraActions:
         gp.check_result(gp.gp_camera_exit(camera))
         with open(target, 'rb') as photo:
             photo_file = photo.read()
-        return photo_file
+        return photo_file, target
