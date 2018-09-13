@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import time
 import sys
+import os
 import paho.mqtt.client as mqtt
 
 def on_connect(client, userdata, flags, rc):
@@ -24,8 +25,11 @@ def on_status(client, userdata, msg):
 
 def main(action='status'):
 
-    MQTT_HOST = "0.tcp.ngrok.io"
-    TIMEOUT = 600
+    if os.environ.get('DOCKER'):
+        MQTT_HOST = 'mqtt'
+    else:
+        MQTT_HOST = 'localhost'
+    TIMEOUT = 300
     CALLBACK = 0
 
     client = mqtt.Client(client_id='test_client')
@@ -33,7 +37,7 @@ def main(action='status'):
     client.on_connect = on_connect
     client.on_message = on_message
     client.message_callback_add('camera_comms/status/', on_status)
-    client.connect(MQTT_HOST, 12653, 60)
+    client.connect(MQTT_HOST, 1883, 60)
 
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.

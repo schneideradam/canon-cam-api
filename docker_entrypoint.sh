@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 camera_init.py
+python3 camera-controller/camera_init.py
