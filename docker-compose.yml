@@ -11,7 +11,7 @@ services:
     env_file:
       - .env
     devices:
-      - "/dev/bus/usb:/dev/bus/usb"
+      - "/dev:/dev"
     depends_on:
       - mqtt
   mqtt:

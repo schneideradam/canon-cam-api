@@ -11,13 +11,17 @@ from camera_controller import CameraActions
 SENTRY_DSN = os.environ.get('SENTRY_DSN', None)
 LOGSTASH_HOST = os.environ.get('LOGSTASH_HOST', None)
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('Camera-Controller')
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
+
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
 logger.addHandler(logstash.LogstashHandler(LOGSTASH_HOST, 5001, version=1))
 
 sentry = SentryHandler(SENTRY_DSN)
-sentry.setLevel(logging.WARNING)
+sentry.setLevel(logging.ERROR)
 setup_logging(sentry)
 
 # If we are running in a docker stack, we will look to the local MQTT broker
@@ -43,6 +47,7 @@ def on_message(client, userdata, msg):
         try:
             image = action.capture_image()
             client.publish('camera_comms/', payload=image)
+            logger.info('Image captured')
         except Exception as e:
             logger.error(
                 'Could not access camera {}'.format(str(e))
@@ -52,13 +57,16 @@ def on_message(client, userdata, msg):
         try:
             summary = action.get_summary()
             client.publish('camera_comms/status/', payload=summary)
+            logger.info(summary)
         except Exception as e:
             logger.error(
                 'Could not access camera {}'.format(str(e))
             )
             client.publish('camera_comms/status/', payload=str(e))
+            client.disconnect()
     else:
         logger.warning('Unknown command {}'.format(payload))
+        sentry
 
 
 client = mqtt.Client(client_id='camera_status')
