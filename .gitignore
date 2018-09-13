@@ -7,3 +7,5 @@ htmlcov
 *.pyc
 test/photos/*
 *.DS_store*
+.env
+.mqtt_env
