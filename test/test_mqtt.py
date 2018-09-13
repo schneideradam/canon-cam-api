@@ -11,12 +11,11 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    print(TIMEOUT)
     filename = "photos/image_{}.jpg".format(time.strftime("%Y%m%d-%H%M%S", time.localtime()))
     image = msg.payload
     with open(filename, 'wb') as img:
         img.write(image)
-    super().CALLBACK = (super().TIMEOUT + 1)
+    # super().CALLBACK = (super().TIMEOUT + 1)
 
 
 def on_status(client, userdata, msg):
@@ -26,7 +25,7 @@ def on_status(client, userdata, msg):
 def main(action='status'):
 
     MQTT_HOST = "0.tcp.ngrok.io"
-    TIMEOUT = 200
+    TIMEOUT = 600
     CALLBACK = 0
 
     client = mqtt.Client(client_id='test_client')
