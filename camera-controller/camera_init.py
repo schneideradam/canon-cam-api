@@ -69,7 +69,7 @@ def on_message(client, userdata, msg):
             client.publish('camera_comms/status/', payload=str(e))
     elif payload == 'test':
         try:
-            with open('test_photo.jpg', 'rb') as test_img:
+            with open(DIR + '/test_photo.jpg', 'rb') as test_img:
                 img = test_img.read()
             client.publish('camera_comms/', payload=img)
             logger.info('Sending test image')
