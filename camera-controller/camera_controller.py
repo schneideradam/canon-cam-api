@@ -10,6 +10,7 @@ import gphoto2 as gp
 PHOTOS_FOLDER = os.environ.get('PHOTOS_FOLDER', '/tmp')
 logger = logging.getLogger(__name__)
 
+
 class CameraActions:
 
     def get_summary(self):

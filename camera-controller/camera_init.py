@@ -67,12 +67,16 @@ def on_message(client, userdata, msg):
                 'Could not access camera {}'.format(str(e))
             )
             client.publish('camera_comms/status/', payload=str(e))
-            client.disconnect()
     elif payload == 'test':
-        with open('test_photo.jpg', 'rb') as test_img:
-            img = test_img.read()
-        client.publish('camera_comms/', payload=img)
-        logger.info('Sending test image')
+        try:
+            with open('test_photo.jpg', 'rb') as test_img:
+                img = test_img.read()
+            client.publish('camera_comms/', payload=img)
+            logger.info('Sending test image')
+        except Exception as e:
+            logger.error(
+                'Could not open test image {}'.format(str(e))
+            )
     else:
         logger.warning('Unknown command {}'.format(payload))
 
