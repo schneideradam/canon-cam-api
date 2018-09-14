@@ -24,9 +24,9 @@
 sudo apt-get install docker
 ```
 
-#### ENV Vars
+#### ENV Vars (optional)
 
-You'll need access to the .env files. These can be built with the included encrypted files.  You can just run the make_env_vars script to the files but ou'll need the vault password. They merely contain mqtt creds and logging / sentry creds.
+You'll need access to the .env files. These can be built with the included encrypted files.  Run the make_env_vars script and enter the vault password. This step is optional if you don't have the vault password.  The env files merely contain mqtt creds and logging / sentry creds, but this stack can run without them.
 
 ```bash
 bash make-env.sh
