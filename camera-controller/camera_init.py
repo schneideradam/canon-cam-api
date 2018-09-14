@@ -70,11 +70,11 @@ def on_message(client, userdata, msg):
             client.disconnect()
     elif payload == 'test':
         with open('test_photo.jpg', 'rb') as test_img:
-            client.publish('camera_comms/', payload=test_img)
-            logger.info('Sending test image')
+            img = test_img.read()
+        client.publish('camera_comms/', payload=img)
+        logger.info('Sending test image')
     else:
         logger.warning('Unknown command {}'.format(payload))
-
 
 
 client = mqtt.Client(client_id='camera_status')
