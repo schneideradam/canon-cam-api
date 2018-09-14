@@ -1,5 +1,7 @@
 # DSLR Controller - Raspberry Pi / Deb Linux
 
+------
+
 
 
 [TOC]
@@ -49,7 +51,14 @@ There are currently no automated tests but you can run the test_mqtt.py file to 
 python test/test_mqtt.py capture
 ```
 
+## Usage
 
+Relies on standard MQTT communications so whichever client you choose to interact with MQTT will work.  You can send one of two commands below:
+
+| Topic                | Command | Response                                         |
+| -------------------- | ------- | ------------------------------------------------ |
+| camera_comms/status/ | status  | Summary of the connected camera (if one is read) |
+| camera_comms/        | capture | A byte stream object of the photo.               |
 
 ## **Still being developed
 
