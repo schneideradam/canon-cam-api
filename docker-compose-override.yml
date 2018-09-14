@@ -4,6 +4,7 @@ services:
     restart: always
     environment:
       - DOCKER=True
+      - DEBUG=True
     build: .
     command: bash docker_entrypoint.sh
     volumes:

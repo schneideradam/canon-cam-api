@@ -33,7 +33,7 @@ def main(action='status'):
     else:
         MQTT_HOST = '0.tcp.ngrok.io'
         MQTT_PORT = 12653
-    TIMEOUT = 200
+    TIMEOUT = 400
     CALLBACK = 0
 
     client = mqtt.Client(client_id='test_client')

@@ -18,11 +18,14 @@ formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
 stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
-logger.addHandler(logstash.LogstashHandler(LOGSTASH_HOST, 5001, version=1))
 
-sentry = SentryHandler(SENTRY_DSN)
-sentry.setLevel(logging.ERROR)
-setup_logging(sentry)
+if LOGSTASH_HOST:
+    logger.addHandler(logstash.LogstashHandler(LOGSTASH_HOST, 5001, version=1))
+
+if SENTRY_DSN:
+    sentry = SentryHandler(SENTRY_DSN)
+    sentry.setLevel(logging.ERROR)
+    setup_logging(sentry)
 
 # If we are running in a docker stack, we will look to the local MQTT broker
 if os.environ.get('DOCKER'):
