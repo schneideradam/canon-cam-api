@@ -4,18 +4,19 @@ services:
     restart: always
     environment:
       - DOCKER=True
-      - DEBUG=True
     build: .
     command: bash docker_entrypoint.sh
     volumes:
       - .:/src
     env_file:
       - .env
+    devices:
+      - "/dev/bus/usb:/dev/bus/usb"
     depends_on:
       - mqtt
   mqtt:
     restart: always
-    image: mjenz/rpi-mosquitto
+    image: eclipse-mosquitto
     ports:
       - "1883:1883"
       - "9001:9001"

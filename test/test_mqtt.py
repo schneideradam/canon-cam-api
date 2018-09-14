@@ -31,8 +31,8 @@ def main(action='status'):
         MQTT_HOST = 'mqtt'
         MQTT_PORT = '1883'
     else:
-        MQTT_HOST = '0.tcp.ngrok.io'
-        MQTT_PORT = 12653
+        MQTT_HOST = '10.200.200.59'
+        MQTT_PORT = 1883
     TIMEOUT = 400
     CALLBACK = 0
 
@@ -49,6 +49,8 @@ def main(action='status'):
     # manual interface.
     if action == 'capture':
         client.publish('camera_comms/', payload='capture')
+    elif action == 'test':
+        client.publish('camera_comms/', payload='test')
     else:
         client.publish('camera_comms/status/', payload='status')
     client.loop_start()

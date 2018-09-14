@@ -33,6 +33,7 @@ if os.environ.get('DOCKER'):
 else:
     MQTT_HOSTNAME = 'localhost'
 
+DIR = os.path.dirname(os.path.realpath(__file__))
 
 def on_connect(client, userdata, flags, rc):
     # Successfull connection callback
@@ -67,9 +68,13 @@ def on_message(client, userdata, msg):
             )
             client.publish('camera_comms/status/', payload=str(e))
             client.disconnect()
+    elif payload == 'test':
+        with open('test_photo.jpg', 'rb') as test_img:
+            client.publish('camera_comms/', payload=test_img)
+            logger.info('Sending test image')
     else:
         logger.warning('Unknown command {}'.format(payload))
-        sentry
+
 
 
 client = mqtt.Client(client_id='camera_status')
