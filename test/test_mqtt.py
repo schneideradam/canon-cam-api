@@ -51,6 +51,8 @@ def main(action='status'):
         client.publish('camera_comms/', payload='capture')
     elif action == 'test':
         client.publish('camera_comms/', payload='test')
+    elif action == 'countdown':
+        client.publish('camera_comms/', payload='countdown')
     else:
         client.publish('camera_comms/status/', payload='status')
     client.loop_start()

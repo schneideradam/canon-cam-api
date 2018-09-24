@@ -35,11 +35,12 @@ else:
     MQTT_HOSTNAME = 'localhost'
 
 # Brighsign communications
-UDP_IPS = ["marriottphotowindow3.local", "marriottphotowindow2.local", "marriottphotowindow1.local"]
+UDP_IPS = ["marriottphotowindow1.local", "marriottphotowindow2.local",
+           "marriottphotowindow3.local"]
 UDP_PORT = 5000
 
 DIR = os.path.dirname(os.path.realpath(__file__))
-'''
+
 def send_brightsign_command(command):
     cmd = command.encode()
     try:
@@ -50,7 +51,7 @@ def send_brightsign_command(command):
         logger.error(
             'Could not send UDP command {}'.format(str(e))
         )
-'''
+
 def on_connect(client, userdata, flags, rc):
     # Successfull connection callback
     logger.info("Connected with result code "+str(rc))
@@ -94,26 +95,10 @@ def on_message(client, userdata, msg):
                 'Could not open test image {}'.format(str(e))
             )
     elif payload == 'countdown':
-        cmd = "1"
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            for bs in UDP_IPS:
-                sock.sendto(cmd, (bs, UDP_PORT))
-        except Exception as e:
-            print(
-                'Could not send UDP command {}'.format(str(e))
-            )
+        send_brightsign_command("1")
         logger.info('brighsign command recieved: {}'.format(payload))
     elif payload == 'complete':
-        cmd = "0"
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            for bs in UDP_IPS:
-                sock.sendto(cmd, (bs, UDP_PORT))
-        except Exception as e:
-            print(
-                'Could not send UDP command {}'.format(str(e))
-            )
+        send_brightsign_command("0")
         logger.info('brighsign command recieved: {}'.format(payload))
     else:
         logger.warning('Unknown command {}'.format(payload))
