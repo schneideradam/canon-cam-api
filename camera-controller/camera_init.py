@@ -35,8 +35,8 @@ else:
     MQTT_HOSTNAME = 'localhost'
 
 # Brighsign communications
-UDP_IPS = ["10.38.0.145", "10.38.0.140",
-           "10.38.0.135"]
+UDP_IPS = ["marriottphotowindow1.local", "marriottphotowindow2.local",
+           "marriottphotowindow3.local"]
 UDP_PORT = 5000
 
 DIR = os.path.dirname(os.path.realpath(__file__))
