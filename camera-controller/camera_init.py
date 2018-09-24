@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import socket
 import logging
 import logstash
 from raven.handlers.logging import SentryHandler
@@ -33,7 +34,23 @@ if os.environ.get('DOCKER'):
 else:
     MQTT_HOSTNAME = 'localhost'
 
+# Brighsign communications
+UDP_IPS = ["marriottphotowindow1.local", "marriottphotowindow2.local",
+          "marriottphotowindow3.local"]
+UDP_PORT = 5000
+
 DIR = os.path.dirname(os.path.realpath(__file__))
+
+def send_brightsign_command(command):
+    cmd = command.encode()
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        for bs in UDP_IPS:
+            sock.sendto(cmd, (bs, UDP_PORT))
+    except Exception as e:
+        logger.error(
+            'Could not send UDP command {}'.format(str(e))
+        )
 
 def on_connect(client, userdata, flags, rc):
     # Successfull connection callback
@@ -69,7 +86,7 @@ def on_message(client, userdata, msg):
             client.publish('camera_comms/status/', payload=str(e))
     elif payload == 'test':
         try:
-            with open(DIR + '/test_photo.jpg', 'rb') as test_img:
+            with open('test_photo.jpg', 'rb') as test_img:
                 img = test_img.read()
             client.publish('camera_comms/', payload=img)
             logger.info('Sending test image')
@@ -77,9 +94,12 @@ def on_message(client, userdata, msg):
             logger.error(
                 'Could not open test image {}'.format(str(e))
             )
+    elif payload == 'countdown':
+        send_brightsign_command("1")
+    elif payload == 'complete':
+        send_brightsign_command("0")
     else:
         logger.warning('Unknown command {}'.format(payload))
-
 
 client = mqtt.Client(client_id='camera_status')
 # client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)

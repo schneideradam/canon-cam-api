@@ -31,9 +31,9 @@ def main(action='status'):
         MQTT_HOST = 'mqtt'
         MQTT_PORT = '1883'
     else:
-        MQTT_HOST = '10.200.200.59'
+        MQTT_HOST = 'camera-controller.local'
         MQTT_PORT = 1883
-    TIMEOUT = 400
+    TIMEOUT = 300
     CALLBACK = 0
 
     client = mqtt.Client(client_id='test_client')
