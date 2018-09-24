@@ -42,7 +42,7 @@ UDP_PORT = 5000
 DIR = os.path.dirname(os.path.realpath(__file__))
 
 def send_brightsign_command(command):
-    cmd = command.encode()
+    cmd = (str(command)).encode()
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         for bs in UDP_IPS:
@@ -95,10 +95,10 @@ def on_message(client, userdata, msg):
                 'Could not open test image {}'.format(str(e))
             )
     elif payload == 'countdown':
-        send_brightsign_command(1)
+        send_brightsign_command("1")
         logger.info('brighsign command recieved: {}'.format(payload))
     elif payload == 'complete':
-        send_brightsign_command(0)
+        send_brightsign_command("0")
         logger.info('brighsign command recieved: {}'.format(payload))
     else:
         logger.warning('Unknown command {}'.format(payload))
