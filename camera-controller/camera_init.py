@@ -96,8 +96,10 @@ def on_message(client, userdata, msg):
             )
     elif payload == 'countdown':
         send_brightsign_command("1")
+        logger.info('brighsign command recieved: {}'.format(payload))
     elif payload == 'complete':
         send_brightsign_command("0")
+        logger.info('brighsign command recieved: {}'.format(payload))
     else:
         logger.warning('Unknown command {}'.format(payload))
 
