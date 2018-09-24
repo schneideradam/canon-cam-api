@@ -4,8 +4,7 @@ import socket
 UDP_IPS = ["marriottphotowindow3.local", "marriottphotowindow2.local", "marriottphotowindow1.local"]
 UDP_PORT = 5000
 while True:
-    payload = input("Enter a command (1 or 0):")
-    import pdb; pdb.set_trace()
+    payload = input("Enter a command (1 or 0):").encode()
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         for bs in UDP_IPS:

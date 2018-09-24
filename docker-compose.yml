@@ -12,6 +12,8 @@ services:
       - .env
     devices:
       - "/dev/bus/usb:/dev/bus/usb"
+    ports:
+      - "5000:5000"
     depends_on:
       - mqtt
   mqtt:
