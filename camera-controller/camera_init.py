@@ -47,7 +47,6 @@ def send_brightsign_command(command):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         for bs in UDP_IPS:
             sock.sendto(cmd, (bs, UDP_PORT))
-            logger.info('sending object: type:{}, command: {}'.format(type(cmd), cmd))
     except Exception as e:
         logger.error(
             'Could not send UDP command {}'.format(str(e))

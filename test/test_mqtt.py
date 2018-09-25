@@ -31,7 +31,7 @@ def main(action='status'):
         MQTT_HOST = 'mqtt'
         MQTT_PORT = '1883'
     else:
-        MQTT_HOST = 'camera-controller.local'
+        MQTT_HOST = '10.38.0.198'
         MQTT_PORT = 1883
     TIMEOUT = 300
     CALLBACK = 0
