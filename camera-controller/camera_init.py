@@ -65,35 +65,20 @@ def on_message(client, userdata, msg):
     payload = msg.payload.decode()
     action = CameraActions()
     if payload == 'capture':
-        try:
             image, target = action.capture_image()
             client.publish('camera_comms/', payload=image)
             logger.info('Image captured - {}'.format(target))
-        except Exception as e:
-            logger.error(
-                'Could not access camera {}'.format(str(e))
-            )
             client.publish('camera_comms/', payload=str(e))
     elif payload == 'status':
-        try:
             summary = action.get_summary()
             client.publish('camera_comms/status/', payload=summary)
             logger.info(summary)
-        except Exception as e:
-            logger.error(
-                'Could not access camera {}'.format(str(e))
-            )
             client.publish('camera_comms/status/', payload=str(e))
     elif payload == 'test':
-        try:
-            with open('test_photo.jpg', 'rb') as test_img:
-                img = test_img.read()
-            client.publish('camera_comms/', payload=img)
-            logger.info('Sending test image')
-        except Exception as e:
-            logger.error(
-                'Could not open test image {}'.format(str(e))
-            )
+        with open('test_photo.jpg', 'rb') as test_img:
+            img = test_img.read()
+        client.publish('camera_comms/', payload=img)
+        logger.info('Sending test image')
     elif payload == 'countdown':
         send_brightsign_command("1")
         logger.info('brighsign command recieved: {}'.format(payload))

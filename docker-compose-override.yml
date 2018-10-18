@@ -10,8 +10,6 @@ services:
       - .:/src
     env_file:
       - .env
-    devices:
-      - "/dev/bus/usb:/dev/bus/usb"
     depends_on:
       - mqtt
   mqtt:

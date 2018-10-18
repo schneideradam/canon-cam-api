@@ -31,9 +31,9 @@ def main(action='status'):
         MQTT_HOST = 'mqtt'
         MQTT_PORT = '1883'
     else:
-        MQTT_HOST = '10.38.0.198'
+        MQTT_HOST = '174.129.68.254'
         MQTT_PORT = 1883
-    TIMEOUT = 300
+    TIMEOUT = 600
     CALLBACK = 0
 
     client = mqtt.Client(client_id='test_client')
@@ -50,6 +50,7 @@ def main(action='status'):
     if action == 'capture':
         client.publish('camera_comms/', payload='capture')
     elif action == 'test':
+        print(DIR)
         client.publish('camera_comms/', payload='test')
     elif action == 'countdown':
         client.publish('camera_comms/', payload='countdown')
