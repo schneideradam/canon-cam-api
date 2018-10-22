@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import socket
 import logging
 import logstash
 from raven.handlers.logging import SentryHandler
@@ -34,23 +33,8 @@ if os.environ.get('DOCKER'):
 else:
     MQTT_HOSTNAME = 'localhost'
 
-# Brighsign communications
-UDP_IPS = ["10.38.0.145", "10.38.0.140",
-           "10.38.0.135"]
-UDP_PORT = 5000
-
 DIR = os.path.dirname(os.path.realpath(__file__))
 
-def send_brightsign_command(command):
-    cmd = (str(command)).encode()
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        for bs in UDP_IPS:
-            sock.sendto(cmd, (bs, UDP_PORT))
-    except Exception as e:
-        logger.error(
-            'Could not send UDP command {}'.format(str(e))
-        )
 
 def on_connect(client, userdata, flags, rc):
     # Successfull connection callback
@@ -61,37 +45,29 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    # The callback for when a PUBLISH message is received from the server
+    # The callback for when any PUBLISH message is received from the server
     payload = msg.payload.decode()
+    logger.info("message received: {}".format(payload))
+
+
+def on_capture(client, userdata, msg):
     action = CameraActions()
-    if payload == 'capture':
-            image, target = action.capture_image()
-            client.publish('camera_comms/', payload=image)
-            logger.info('Image captured - {}'.format(target))
-            client.publish('camera_comms/', payload=str(e))
-    elif payload == 'status':
-            summary = action.get_summary()
-            client.publish('camera_comms/status/', payload=summary)
-            logger.info(summary)
-            client.publish('camera_comms/status/', payload=str(e))
-    elif payload == 'test':
-        with open('test_photo.jpg', 'rb') as test_img:
-            img = test_img.read()
-        client.publish('camera_comms/', payload=img)
-        logger.info('Sending test image')
-    elif payload == 'countdown':
-        send_brightsign_command("1")
-        logger.info('brighsign command recieved: {}'.format(payload))
-    elif payload == 'complete':
-        send_brightsign_command("0")
-        logger.info('brighsign command recieved: {}'.format(payload))
-    else:
-        logger.warning('Unknown command {}'.format(payload))
+    image, target = action.capture_image()
+    client.publish('camera_comms/image/', payload=image)
+    logger.info('Image captured - {}'.format(target))
+
+
+def on_test(client, userdata, msg):
+    with open('test_photo.jpg', 'rb') as image:
+        client.publish('camera_comms/image/', payload=image)
+
 
 client = mqtt.Client(client_id='camera_status')
 # client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
 client.on_connect = on_connect
 client.on_message = on_message
+client.message_callback_add('camera_comms/capture/', on_capture)
+client.message_callback_add('camera_comms/test/', on_test)
 client.connect(MQTT_HOSTNAME, 1883, 60)
 
 # Blocking call that processes network traffic, dispatches callbacks and

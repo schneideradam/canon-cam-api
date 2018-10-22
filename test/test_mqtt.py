@@ -2,6 +2,7 @@
 import time
 import sys
 import os
+import uuid
 import paho.mqtt.client as mqtt
 
 DIR = os.path.dirname(os.path.realpath(__file__))
@@ -13,8 +14,9 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("camera_comms/#")
 
 
-def on_message(client, userdata, msg):
-    filename = "{}/photos/image_{}.jpg".format(DIR, time.strftime("%Y%m%d-%H%M%S", time.localtime()))
+def on_image(client, userdata, msg):
+    print("testing")
+    filename = "{}/photos/image_{}.jpg".format(DIR, uuid.uuid1())
     image = msg.payload
     with open(filename, 'wb') as img:
         img.write(image)
@@ -31,7 +33,7 @@ def main(action='status'):
         MQTT_HOST = 'mqtt'
         MQTT_PORT = '1883'
     else:
-        MQTT_HOST = '174.129.68.254'
+        MQTT_HOST = '34.219.224.47'
         MQTT_PORT = 1883
     TIMEOUT = 600
     CALLBACK = 0
@@ -39,8 +41,8 @@ def main(action='status'):
     client = mqtt.Client(client_id='test_client')
     # client.username_pw_set(settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
     client.on_connect = on_connect
-    client.on_message = on_message
     client.message_callback_add('camera_comms/status/', on_status)
+    client.message_callback_add('camera_comms/image/', on_image)
     client.connect(MQTT_HOST, MQTT_PORT, 60)
 
     # Blocking call that processes network traffic, dispatches callbacks and
@@ -48,16 +50,9 @@ def main(action='status'):
     # Other loop*() functions are available that give a threaded interface and a
     # manual interface.
     if action == 'capture':
-        client.publish('camera_comms/', payload='capture')
+        client.publish('camera_comms/capture/', payload='capture')
     elif action == 'test':
-        print(DIR)
-        client.publish('camera_comms/', payload='test')
-    elif action == 'countdown':
-        client.publish('camera_comms/', payload='countdown')
-    elif action == 'complete':
-        client.publish('camera_comms/', payload='complete')
-    else:
-        client.publish('camera_comms/status/', payload='status')
+        client.publish('camera_comms/test/', payload='test')
     client.loop_start()
     while CALLBACK < TIMEOUT:
         time.sleep(.01)
