@@ -14,7 +14,7 @@ services:
       - mqtt
   mqtt:
     restart: always
-    image: eclipse-mosquitto
+    image: erlio/docker-vernmq
     ports:
       - "1883:1883"
       - "9001:9001"
