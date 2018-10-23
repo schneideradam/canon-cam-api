@@ -14,7 +14,7 @@ services:
       - mqtt
   mqtt:
     restart: always
-    image: erlio/docker-vernmq
+    image: erlio/docker-vernemq
     ports:
       - "1883:1883"
       - "9001:9001"
