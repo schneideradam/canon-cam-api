@@ -38,7 +38,7 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 
 def on_connect(client, userdata, flags, rc):
     # Successfull connection callback
-    logger.info("Connected with result code "+str(rc))
+    logger.info("{} - Connected to mqtt broker".format(client))
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     client.subscribe("camera_comms/#")
@@ -58,11 +58,13 @@ def on_capture(client, userdata, msg):
 
 
 def on_test(client, userdata, msg):
-    '''
     with open('test_photo.jpg', 'rb') as image:
         client.publish('camera_comms/image/', payload=image)
-    '''
-    client.publish('camera_comms/image/', payload="blah")
+
+def on_status(client, userdata, msg):
+    action = CameraActions()
+    status = action.get_summary()
+    client.publish('camera_comms/status', payload=str(status))
 
 
 client = mqtt.Client(client_id='camera_status')
@@ -71,6 +73,7 @@ client.on_connect = on_connect
 client.on_message = on_message
 client.message_callback_add('camera_comms/capture/', on_capture)
 client.message_callback_add('camera_comms/test/', on_test)
+client.message_callback_add('camera_comms/status/', on_status)
 client.connect(MQTT_HOSTNAME, 1883, 60)
 
 # Blocking call that processes network traffic, dispatches callbacks and
