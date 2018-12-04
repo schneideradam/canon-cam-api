@@ -64,7 +64,7 @@ def on_test(client, userdata, msg):
 def on_status(client, userdata, msg):
     action = CameraActions()
     status = action.get_summary()
-    client.publish('camera_comms/status', payload=str(status))
+    client.publish('camera_comms/status', payload=status)
 
 
 client = mqtt.Client(client_id='camera_status')
