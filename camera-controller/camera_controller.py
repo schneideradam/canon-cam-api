@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import logging
+import tempfile
 
 # The camera interface library
 import gphoto2 as gp
