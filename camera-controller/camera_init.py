@@ -51,15 +51,21 @@ def on_message(client, userdata, msg):
 
 
 def on_capture(client, userdata, msg):
-    action = CameraActions()
-    image, target = action.capture_image()
-    client.publish('camera_comms/image/', payload=image)
-    logger.info('Image captured - {}'.format(target))
+    try:
+        action = CameraActions()
+        image, target = action.capture_image()
+        client.publish('camera_comms/image/', payload=image)
+        logger.info('Image captured - {}'.format(target))
+    except Exception as e:
+        logger.exception(e, 'Failed to capture an image')
+        # send dummy image
+        on_test(client, userdata, msg)
+
 
 
 def on_test(client, userdata, msg):
     with open('test_photo.jpg', 'rb') as image:
-        client.publish('camera_comms/image/', payload=image)
+        client.publish('camera_comms/image/', payload=image.read())
 
 def on_status(client, userdata, msg):
     action = CameraActions()
